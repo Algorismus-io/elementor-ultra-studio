@@ -1,0 +1,75 @@
+{
+  "viewport": 1200,
+  "totalHeight": 4081,
+  "anchors": [
+    {
+      "name": "hero-h1",
+      "selector": "h1",
+      "y": 255
+    },
+    {
+      "name": "features-h2",
+      "selector": "text=Everything you need",
+      "y": 1124
+    },
+    {
+      "name": "product-h2",
+      "selector": "text=Intuitive interface",
+      "y": 1838
+    },
+    {
+      "name": "faq-h2",
+      "selector": "text=Frequently asked questions",
+      "y": 2896
+    },
+    {
+      "name": "signup-h2",
+      "selector": "text=Get instant access",
+      "y": 3660
+    },
+    {
+      "name": "deco-cursor",
+      "selector": "img[src*='cursor']",
+      "y": 378,
+      "minW": 120,
+      "minH": 120
+    },
+    {
+      "name": "deco-message",
+      "selector": "img[src*='message']",
+      "y": 301,
+      "minW": 120,
+      "minH": 120
+    },
+    {
+      "name": "deco-pie",
+      "selector": "img[src*='pie']",
+      "y": 3540,
+      "minW": 180,
+      "minH": 180
+    },
+    {
+      "name": "deco-gear",
+      "selector": "img[src*='gear']",
+      "y": 3712,
+      "minW": 150,
+      "minH": 150
+    },
+    {
+      "name": "app-shot",
+      "selector": "img[src*='app']",
+      "y": 2078,
+      "minW": 900,
+      "minH": 500
+    }
+  ],
+  "bands": [
+    {
+      "name": "logo-ticker",
+      "y0": 930,
+      "y1": 975,
+      "minInkPx": 3000
+    }
+  ],
+  "generalizeWidth": 1512
+}

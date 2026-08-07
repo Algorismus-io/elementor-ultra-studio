@@ -1,0 +1,14 @@
+{
+  "name": "one-task",
+  "description": "Framer 'One Task at a Time' dark SaaS landing (Figma WPOS-Development 608:13636, 1200×4081). Canonical authoring benchmark: 8 sections, 3D decorations, logo ticker with an invisible-ink asset trap, FAQ accordions, email CTA.",
+  "figma": "https://www.figma.com/design/ogxmGWnTEJK3TEPnMWp2by/WPOS-Development?node-id=608-13636",
+  "reference": "assets/export-full.png",
+  "briefTemplate": "brief-template.md",
+  "anchorsFile": "anchors.json",
+  "fidelityBar": { "anchorMeanPx": 2, "heightTolerancePx": 40, "pixelMeanMax": 10 },
+  "knownTraps": [
+    "ticker logo PNGs are black ink @50% alpha — invisible over black unless tinted (paint band catches it)",
+    "decoration images can collapse to zero width while passing position anchors (minW floors catch it)",
+    "hero glow is a layered gradient + planet ellipse — photometric diff catches washed-out composites"
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@algorismus/elementor-ultra-studio",
+  "version": "0.1.0",
+  "description": "One-command, self-healing Elementor build environment for AI agents: hardened local WordPress, health doctor, pixel-verify service, and agent brief generator. Composes @algorismus/elementor-ultra-playground, @algorismus/elementor-ultra-mcp and @algorismus/elementor-jsx.",
+  "license": "MIT",
+  "author": "Algorismus (https://algorismus.io)",
+  "type": "module",
+  "bin": {
+    "eu-studio": "bin/studio.mjs"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "templates",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@algorismus/elementor-ultra-playground": "^1.0.0"
+  },
+  "keywords": [
+    "elementor",
+    "wordpress",
+    "ai-agents",
+    "mcp",
+    "figma"
+  ]
+}
