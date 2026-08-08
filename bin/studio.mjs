@@ -95,9 +95,29 @@ async function main() {
     process.exit(rep.ok ? 0 : 1);
   }
 
+  if (cmd === 'carry-css') {
+    const pageIds = argv.filter((a, i) => argv[i - 1] === '--page').map(Number).filter(Boolean);
+    if (!pageIds.length) { console.log('usage: eu-studio carry-css --page <id> [--page <id> …]\nBakes each page\'s generated CSS into the page as an inline carrier — styling survives the flaky Playground css file store. Idempotent.'); process.exit(2); }
+    const { run } = await import('../lib/carrycss.mjs');
+    const rep = await run(env, { pageIds });
+    for (const p of rep.pages) (p.ok ? ok : bad)(`page ${p.id}: ${p.detail}`);
+    console.log(JSON.stringify(rep));
+    process.exit(rep.pass ? 0 : 1);
+  }
+
   if (cmd === 'verify') {
     const anchorsPath = val('--anchors');
     const pageUrl = val('--page-url', '/');
+    const pagesCsv = val('--pages');
+    if (pagesCsv) {
+      // quick mode: no reference needed — structural matrix (scrollWidth/h1/console) per page×width
+      const { run } = await import('../lib/quickverify.mjs');
+      const widths = val('--widths', '1200,1512,390').split(',').map(Number);
+      const rep = await run(env, { pages: pagesCsv.split(','), widths });
+      for (const r of rep.results) (r.ok ? ok : bad)(`${r.page} @${r.width}: ${r.error ? r.error : `sw=${r.scrollWidth} h1=${r.h1}${r.offenders?.length ? ' offenders: ' + r.offenders.join(',') : ''}${r.consoleErrors?.length ? ` jsErrors=${r.consoleErrors.length}` : ''}`}`);
+      console.log(JSON.stringify(rep));
+      process.exit(rep.pass ? 0 : 1);
+    }
     if (!anchorsPath) {
       console.log(`usage: eu-studio verify --page-url </home/ or full url> --anchors anchors.json [--no-mobile] [--tolerance 2]
 
