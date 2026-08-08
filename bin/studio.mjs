@@ -95,6 +95,32 @@ async function main() {
     process.exit(rep.ok ? 0 : 1);
   }
 
+  if (cmd === 'clicktest') {
+    const tests = [];
+    for (let i = 1; i < argv.length; i++) {
+      const kind = argv[i]?.replace(/^--/, '');
+      if (['form', 'accordion', 'burger', 'nav'].includes(kind) && argv[i + 1]) {
+        const [page, arg] = argv[i + 1].split('=');
+        tests.push({ kind, page, arg });
+        i++;
+      }
+    }
+    if (!tests.length) {
+      console.log(`usage: eu-studio clicktest [--form /contact/] [--accordion /pricing/] [--burger /] [--nav /=about]
+One call runs the standard interaction tests (no hand-written playwright needed):
+  --form <page>       fill visible inputs, submit, assert success (ajax success:true | success text | form hidden)
+  --accordion <page>  first <details>: opens, body visible, closes back
+  --burger <page>     @390px: menu toggle reveals ≥2 links
+  --nav <page>=<text> click nav link matching <text>, assert navigation`);
+      process.exit(2);
+    }
+    const { run } = await import('../lib/clicktest.mjs');
+    const rep = await run(env, { tests });
+    for (const r of rep.results) (r.ok ? ok : bad)(`${r.test} @${r.page}: ${r.detail}`);
+    console.log(JSON.stringify(rep));
+    process.exit(rep.pass ? 0 : 1);
+  }
+
   if (cmd === 'carry-css') {
     const pageIds = argv.filter((a, i) => argv[i - 1] === '--page').map(Number).filter(Boolean);
     if (!pageIds.length) { console.log('usage: eu-studio carry-css --page <id> [--page <id> …]\nBakes each page\'s generated CSS into the page as an inline carrier — styling survives the flaky Playground css file store. Idempotent.'); process.exit(2); }
@@ -214,6 +240,29 @@ render, anchors.json (with minW/minH presence floors + paint bands), a brief tem
     (rec.pass ? ok : bad)(`${rec.runId}: geometric ${rec.geometric.pass ? 'pass' : 'FAIL'} (mean ${rec.geometric.anchorMeanPx}px${rec.geometric.anchorsFailed.length ? ', failed: ' + rec.geometric.anchorsFailed.join(',') : ''}), photometric ${rec.photometric.pass ? 'pass' : 'FAIL'} (mean ${rec.photometric.meanAbsDiff}/255)`);
     console.log(JSON.stringify(rec));
     process.exit(rec.pass ? 0 : 1);
+  }
+
+  if (cmd === 'brief' && has('--site')) {
+    const { readFileSync: rf, writeFileSync: wf } = await import('node:fs');
+    const name = val('--name');
+    const projectDir = val('--project-dir');
+    const direction = val('--direction', 'Design direction: your call — pick a confident, distinctive system and commit to it. Avoid the generic dark-purple SaaS look.');
+    if (!name || !projectDir || !env.url) { console.log('usage: eu-studio brief --site --name "Acme Co" --project-dir <dir> [--direction "…"] [--url <wp>] [--out <file>]'); process.exit(2); }
+    const tpl = rf(join(PKG, 'templates', 'site-brief.md'), 'utf8');
+    const rendered = tpl
+      .replaceAll('{{SITE_NAME}}', name)
+      .replaceAll('{{DIRECTION}}', direction)
+      .replaceAll('{{WP_URL}}', env.url)
+      .replaceAll('{{WP_APP_PASSWORD}}', env.appPassword || 'SET_WP_APP_PASSWORD')
+      .replaceAll('{{PROJECT_DIR}}', resolve(projectDir))
+      .replaceAll('{{PLAYWRIGHT}}', process.env.EXJSX_IT_PLAYWRIGHT || 'playwright')
+      .replaceAll('{{EXJSX_CLI}}', exjsxCliHint())
+      .replaceAll('{{STUDIO_CLI}}', studioCliHint());
+    const leftover = rendered.match(/\{\{[A-Z_]+\}\}/g);
+    if (leftover) { bad(`unrendered placeholders: ${[...new Set(leftover)].join(', ')}`); process.exit(1); }
+    const out = val('--out', null);
+    if (out) { wf(out, rendered); ok(`site brief → ${out}`); } else console.log(rendered);
+    return;
   }
 
   if (cmd === 'brief') {
