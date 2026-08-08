@@ -1,0 +1,42 @@
+{
+  "name": "Quietpetal",
+  "slug": "quietpetal-florist",
+  "industry": "florist studio",
+  "imageryLed": true,
+  "fonts": [
+    {
+      "family": "Cormorant Garamond",
+      "weights": [
+        400,
+        500,
+        700
+      ],
+      "role": "display"
+    },
+    {
+      "family": "Mulish",
+      "weights": [
+        400,
+        700
+      ],
+      "role": "body"
+    }
+  ],
+  "palette": {
+    "plaster": "#F7F1EC",
+    "rose": "#C88C86",
+    "moss": "#7A8B6F",
+    "plum": "#4A2C3E",
+    "cream": "#FBF8F4"
+  },
+  "archetypes": [
+    "asymmetric offset grid",
+    "editorial multi-column (care notes)",
+    "horizontal band (seasonal rail)",
+    "tall/short section rhythm as feature"
+  ],
+  "verified": {
+    "fonts": 2,
+    "images": 6
+  }
+}

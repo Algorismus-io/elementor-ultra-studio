@@ -1,0 +1,42 @@
+{
+  "name": "Lowtide",
+  "slug": "lowtide-festival",
+  "industry": "coastal music festival",
+  "imageryLed": false,
+  "fonts": [
+    {
+      "family": "Unbounded",
+      "weights": [
+        500,
+        700,
+        900
+      ],
+      "role": "display"
+    },
+    {
+      "family": "Space Grotesk",
+      "weights": [
+        400,
+        600
+      ],
+      "role": "body"
+    }
+  ],
+  "palette": {
+    "night": "#120726",
+    "dusk": "#5A189A",
+    "signal": "#F72585",
+    "sunset": "#FF8500",
+    "sand": "#FFEEDB"
+  },
+  "archetypes": [
+    "oversized display type as layout (lineup)",
+    "horizontal band/timeline (day rails)",
+    "full-bleed color blocks with hard seams",
+    "rotated marquee strip"
+  ],
+  "verified": {
+    "fonts": 2,
+    "images": 1
+  }
+}

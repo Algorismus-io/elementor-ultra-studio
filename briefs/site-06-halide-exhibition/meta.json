@@ -1,0 +1,42 @@
+{
+  "name": "HALIDE: A Century of Light",
+  "slug": "halide-exhibition",
+  "industry": "museum exhibition (photography)",
+  "imageryLed": true,
+  "fonts": [
+    {
+      "family": "Syne",
+      "weights": [
+        500,
+        700,
+        800
+      ],
+      "role": "display"
+    },
+    {
+      "family": "IBM Plex Sans",
+      "weights": [
+        400,
+        600
+      ],
+      "role": "body"
+    }
+  ],
+  "palette": {
+    "gallery": "#111111",
+    "paper": "#F5F4F0",
+    "silver": "#C9C9C9",
+    "acid": "#E3FF00",
+    "ash": "#6E6E6A"
+  },
+  "archetypes": [
+    "sticky/pinned side rail (chapters)",
+    "full-bleed image seams",
+    "editorial multi-column wall text",
+    "table as design object (visiting grid)"
+  ],
+  "verified": {
+    "fonts": 2,
+    "images": 10
+  }
+}

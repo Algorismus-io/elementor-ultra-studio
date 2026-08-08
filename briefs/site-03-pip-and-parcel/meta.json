@@ -1,0 +1,42 @@
+{
+  "name": "Pip & Parcel",
+  "slug": "pip-and-parcel",
+  "industry": "children's craft-box subscription",
+  "imageryLed": false,
+  "fonts": [
+    {
+      "family": "Baloo 2",
+      "weights": [
+        500,
+        700,
+        800
+      ],
+      "role": "display"
+    },
+    {
+      "family": "Nunito",
+      "weights": [
+        400,
+        700
+      ],
+      "role": "body"
+    }
+  ],
+  "palette": {
+    "paper": "#FFF8EB",
+    "ink": "#26547C",
+    "sunshine": "#FFC53D",
+    "bubblegum": "#FF70A6",
+    "grass": "#06D6A0"
+  },
+  "archetypes": [
+    "overlapping/stacked cards with depth",
+    "diagonal/shaped section breaks (wavy SVG)",
+    "oversized display words as layout (M-A-K-E)",
+    "rotated ticket strip"
+  ],
+  "verified": {
+    "fonts": 2,
+    "images": 0
+  }
+}

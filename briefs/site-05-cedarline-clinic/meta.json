@@ -1,0 +1,42 @@
+{
+  "name": "Cedarline Clinic",
+  "slug": "cedarline-clinic",
+  "industry": "healthcare clinic (membership primary care)",
+  "imageryLed": false,
+  "fonts": [
+    {
+      "family": "Sora",
+      "weights": [
+        400,
+        600,
+        800
+      ],
+      "role": "display"
+    },
+    {
+      "family": "Newsreader",
+      "weights": [
+        400,
+        500
+      ],
+      "role": "body"
+    }
+  ],
+  "palette": {
+    "mist": "#F4F7F2",
+    "cloud": "#FDFDFB",
+    "evergreen": "#1E3D34",
+    "sage": "#7FA98C",
+    "clay": "#C97B4A"
+  },
+  "archetypes": [
+    "split-screen 50/50",
+    "editorial multi-column directory",
+    "table as design object (membership comparison)",
+    "very short full-bleed banner"
+  ],
+  "verified": {
+    "fonts": 2,
+    "images": 1
+  }
+}

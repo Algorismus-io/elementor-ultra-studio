@@ -1,0 +1,42 @@
+{
+  "name": "Meridian Atelier",
+  "slug": "meridian-atelier",
+  "industry": "architecture studio (adaptive reuse)",
+  "imageryLed": true,
+  "fonts": [
+    {
+      "family": "Archivo",
+      "weights": [
+        400,
+        600,
+        800
+      ],
+      "role": "display"
+    },
+    {
+      "family": "Instrument Sans",
+      "weights": [
+        400,
+        600
+      ],
+      "role": "body"
+    }
+  ],
+  "palette": {
+    "paper": "#FAFAF7",
+    "concrete": "#E5E3DD",
+    "ink": "#141412",
+    "graphite": "#55534C",
+    "verdigris": "#3E7C6F"
+  },
+  "archetypes": [
+    "asymmetric offset grid",
+    "sticky/pinned side rail",
+    "oversized numerals as layout",
+    "table as design object (works index)"
+  ],
+  "verified": {
+    "fonts": 2,
+    "images": 6
+  }
+}

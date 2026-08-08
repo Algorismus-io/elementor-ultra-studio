@@ -1,0 +1,41 @@
+{
+  "name": "Pixelmoth — LUMEN DRIFT",
+  "slug": "pixelmoth-studio",
+  "industry": "indie game studio",
+  "imageryLed": false,
+  "fonts": [
+    {
+      "family": "Silkscreen",
+      "weights": [
+        400,
+        700
+      ],
+      "role": "display"
+    },
+    {
+      "family": "Rubik",
+      "weights": [
+        400,
+        600
+      ],
+      "role": "body"
+    }
+  ],
+  "palette": {
+    "abyss": "#120458",
+    "glowpink": "#FF2E88",
+    "beam": "#00F0FF",
+    "moth": "#EDEBFF",
+    "drift": "#7A6FF0"
+  },
+  "archetypes": [
+    "oversized display type as layout (title)",
+    "full-bleed color blocks with hard seams (level select)",
+    "overlapping/stacked cards (devlog)",
+    "table as design object (changelog)"
+  ],
+  "verified": {
+    "fonts": 2,
+    "images": 0
+  }
+}

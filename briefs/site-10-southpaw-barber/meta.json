@@ -1,0 +1,40 @@
+{
+  "name": "Southpaw Barber Club",
+  "slug": "southpaw-barber",
+  "industry": "barbershop",
+  "imageryLed": false,
+  "fonts": [
+    {
+      "family": "Alfa Slab One",
+      "weights": [
+        400
+      ],
+      "role": "display"
+    },
+    {
+      "family": "Libre Franklin",
+      "weights": [
+        400,
+        600,
+        800
+      ],
+      "role": "body"
+    }
+  ],
+  "palette": {
+    "navy": "#1B2A41",
+    "cream": "#F4EFE6",
+    "poleRed": "#A62639",
+    "steel": "#7D8CA3"
+  },
+  "archetypes": [
+    "table as design object (price handbill)",
+    "split-screen 50/50",
+    "diagonal stripe seams (barber pole)",
+    "horizontal band (walk-in board)"
+  ],
+  "verified": {
+    "fonts": 2,
+    "images": 1
+  }
+}

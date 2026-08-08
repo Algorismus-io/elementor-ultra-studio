@@ -1,0 +1,42 @@
+{
+  "name": "Crag & Fern",
+  "slug": "crag-and-fern",
+  "industry": "outdoor gear (packs & shelters)",
+  "imageryLed": true,
+  "fonts": [
+    {
+      "family": "Bricolage Grotesque",
+      "weights": [
+        400,
+        600,
+        800
+      ],
+      "role": "display"
+    },
+    {
+      "family": "Inter",
+      "weights": [
+        400,
+        600
+      ],
+      "role": "body"
+    }
+  ],
+  "palette": {
+    "forest": "#1F3B2C",
+    "snow": "#F4F3EF",
+    "stone": "#DCD8CC",
+    "granite": "#55584F",
+    "rust": "#A84B2A"
+  },
+  "archetypes": [
+    "split 60/40",
+    "overlapping/stacked cards with depth",
+    "table as design object (spec sheet)",
+    "diagonal section breaks (ridge seams)"
+  ],
+  "verified": {
+    "fonts": 2,
+    "images": 7
+  }
+}

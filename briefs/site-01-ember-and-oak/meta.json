@@ -1,0 +1,42 @@
+{
+  "name": "Ember & Oak",
+  "slug": "ember-and-oak",
+  "industry": "restaurant (live-fire dining)",
+  "imageryLed": true,
+  "fonts": [
+    {
+      "family": "Fraunces",
+      "weights": [
+        400,
+        600,
+        900
+      ],
+      "role": "display"
+    },
+    {
+      "family": "Karla",
+      "weights": [
+        400,
+        700
+      ],
+      "role": "body"
+    }
+  ],
+  "palette": {
+    "char": "#191310",
+    "bone": "#F2EAD9",
+    "ember": "#C1440E",
+    "flame": "#F4A259",
+    "smoke": "#8A817C"
+  },
+  "archetypes": [
+    "full-bleed image blocks with hard seams",
+    "split-screen 60/40",
+    "table as design object (tasting menu)",
+    "horizontal band/timeline (one evening)"
+  ],
+  "verified": {
+    "fonts": 2,
+    "images": 6
+  }
+}
