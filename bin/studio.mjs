@@ -148,7 +148,7 @@ bands assert a strip actually PAINTS (catches invisible dark-on-dark assets).`);
     if (!port || !dir) { console.log('usage: eu-studio newsite --port <n> --dir <site-dir>  (boots + patches plugin + activates Pro + verifies; idempotent)'); process.exit(2); }
     const { up } = await import('../lib/newsite.mjs');
     const info = await up({ port, dir, pkgRoot: PKG });
-    (info.seam && info.staticGuard404 ? ok : bad)(`${info.url} — Elementor ${info.elementor}${info.pro ? ` + Pro ${info.pro}` : ''}, seam ${info.seam ? 'up' : 'DOWN'}, static-guard ${info.staticGuard404 ? '404 ✓' : 'MISSING'}`);
+    (info.seam && info.staticGuard404 && info.pluginCurrent !== false ? ok : bad)(`${info.url} — Elementor ${info.elementor}${info.pro ? ` + Pro ${info.pro}` : ''}, plugin ${info.plugin}${info.pluginCurrent === false ? ' (STALE — bounce the worker!)' : ''}, seam ${info.seam ? 'up' : 'DOWN'}, static-guard ${info.staticGuard404 ? '404 ✓' : 'MISSING'}`);
     console.log(JSON.stringify(info));
     process.exit(info.seam ? 0 : 1);
   }
