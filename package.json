@@ -1,6 +1,6 @@
 {
   "name": "@algorismus/elementor-ultra-studio",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "One-command, self-healing Elementor build environment for AI agents: hardened local WordPress, health doctor, pixel-verify service, and agent brief generator. Composes @algorismus/elementor-ultra-playground, @algorismus/elementor-ultra-mcp and @algorismus/elementor-jsx.",
   "license": "MIT",
   "author": "Algorismus (https://algorismus.io)",
