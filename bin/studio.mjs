@@ -95,6 +95,31 @@ async function main() {
     process.exit(rep.ok ? 0 : 1);
   }
 
+  if (cmd === 'check') {
+    const pagesCsv = val('--pages');
+    const tests = [];
+    for (let i = 1; i < argv.length; i++) {
+      const kind = argv[i]?.replace(/^--/, '');
+      if (['form', 'accordion', 'burger', 'nav'].includes(kind) && argv[i + 1]) {
+        const [page, arg] = argv[i + 1].split('=');
+        tests.push({ kind, page, arg });
+        i++;
+      }
+    }
+    if (!pagesCsv) {
+      console.log(`usage: eu-studio check --pages /,/about/ [--widths 1200,1512,390] [--form /contact/] [--accordion /pricing/] [--burger /] [--nav /=about]
+The ENTIRE post-deploy gate in one call and one browser session: structural matrix + interaction tests.`);
+      process.exit(2);
+    }
+    const { run } = await import('../lib/check.mjs');
+    const widths = val('--widths', '1200,1512,390').split(',').map(Number);
+    const rep = await run(env, { pages: pagesCsv.split(','), widths, tests });
+    for (const r of rep.structural.results) (r.ok ? ok : bad)(`${r.page} @${r.width}: ${r.error ? r.error : `sw=${r.scrollWidth} h1=${r.h1}${r.offenders?.length ? ' offenders: ' + r.offenders.join(',') : ''}`}`);
+    for (const r of rep.interactions.results) (r.ok ? ok : bad)(`${r.test} @${r.page}: ${r.detail}`);
+    console.log(JSON.stringify(rep));
+    process.exit(rep.pass ? 0 : 1);
+  }
+
   if (cmd === 'clicktest') {
     const tests = [];
     for (let i = 1; i < argv.length; i++) {

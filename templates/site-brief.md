@@ -16,11 +16,15 @@ one-call tools, stop at the bar.
 1. Invoke the `elementor-ultra` skill, then run `{{EXJSX_CLI}} api` and read the card it prints —
    it is the COMPLETE authoring API (intrinsics, sx keys, kit helpers, gotchas). Do not read
    CONVENTIONS.md, kit source, examples, or memory files; the card covers it.
-2. Build: `{{EXJSX_CLI}} lint|build|deploy` with `WP_URL={{WP_URL}} WP_USER=admin WP_APP_PASSWORD={{WP_APP_PASSWORD}}`.
-   Deploys self-prime CSS. Write the WHOLE site before the first deploy.
-3. Verify structure — ONE call: `{{STUDIO_CLI}} verify --pages /,/about/,/pricing/,/contact/`
-4. Test interactions — ONE call (never hand-write playwright):
-   `{{STUDIO_CLI}} clicktest --form /contact/ --accordion /pricing/ --burger / --nav /=about`
+2. Build: `{{EXJSX_CLI}} lint|build` then `deploy <bundle> --fast` with
+   `WP_URL={{WP_URL}} WP_USER=admin WP_APP_PASSWORD={{WP_APP_PASSWORD}}`.
+   (--fast skips slow in-deploy CSS priming; the check below regenerates it via its page visits.)
+   Write the WHOLE site before the first deploy.
+3. Verify EVERYTHING — ONE call, one browser session (never hand-write playwright):
+   `{{STUDIO_CLI}} check --pages /,/about/,/pricing/,/contact/ --form /contact/ --accordion /pricing/ --burger / --nav /=about`
+   → structural matrix (3 widths × all pages) + all interaction tests together, ~1 min total.
+4. After a fix that touches ONE page, re-check only it: `{{STUDIO_CLI}} check --pages /pricing/ [--accordion /pricing/]`
+   — don't re-run the full matrix for a single-page change.
 5. Design review: a handful of playwright screenshots at 1200 + 390, viewed and judged.
 6. If css ever breaks: `{{STUDIO_CLI}} doctor` once; if the file store keeps flaking,
    `{{STUDIO_CLI}} carry-css --page <id> …` once at the end.
@@ -48,14 +52,14 @@ pretty URLs; in-page CTAs may use `id`-prop anchors.
 
 ## Method
 
-theme.mjs → components → all four pages → lint (fix errors) → build → deploy → front page →
-`verify --pages` + `clicktest` (one call each) → screenshots, judge, fix what looks off →
-redeploy (idempotent) → re-verify. **Max 2 fix rounds** — report residuals instead of chasing.
+theme.mjs → components → all four pages → lint (fix errors) → build → deploy --fast → front page →
+ONE `check` call → screenshots, judge, fix what looks off → redeploy --fast (idempotent) →
+targeted re-check. **Max 2 fix rounds** — report residuals instead of chasing.
 
 ## Report (final message — keep it SHORT)
 
 - Page IDs + URLs (one line each)
-- Final `verify --pages` JSON and `clicktest` JSON, verbatim
+- Final `check` JSON, verbatim
 - Screenshot directory path
 - Accepted deviations as a terse bullet list
 No prose narrative, no per-page tables, no design essay — the JSON is the record.
