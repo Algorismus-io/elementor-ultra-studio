@@ -37,18 +37,32 @@ one-call tools, stop at the bar.
 
 Rule 0: design and author FROM SCRATCH — do not search for or reuse any prior site implementation.
 
-fs-project at `{{PROJECT_DIR}}` (`theme.mjs` tokens → `components/` shared Nav/Footer → `pages/`):
+fs-project at `{{PROJECT_DIR}}` (`theme.mjs` tokens → `components/` shared Nav/Footer → `pages/`).
+Four pages with FIXED slugs (home — front page after deploy via `/wp/v2/settings`
+`{show_on_front:"page", page_on_front:<id>}` — plus `about`, `pricing`, `contact`), but YOU design
+each page's structure from its job. Hard requirements, few and testable:
 
-1. **home** (front page after deploy via `/wp/v2/settings` `{show_on_front:"page", page_on_front:<id>}`):
-   nav (wordmark, links, CTA) · hero with CSS/SVG-only art · 3 feature cards · stats band ·
-   testimonial · footer (links, inline-SVG socials, copyright).
-2. **about**: manifesto story, values grid, team grid (CSS initials avatars, no photos).
-3. **pricing**: 3 tiers (one featured), checklists, FAQ with 4 real `<details>/<summary>` accordions.
-4. **contact**: pitch + working Pro form (`actions:['collect-submissions']` — email action is
-   upstream-broken on this stack) + `formSuccess()` for the visible sent-state.
+- every page: shared nav (with working mobile menu) + footer, one h1, real cross-page links
+- somewhere on `/pricing/`: the offer(s), plus ≥3 real `<details>/<summary>` disclosure items
+  (FAQ, spec sheets, T&C — whatever fits the concept)
+- `/contact/`: a working Pro form (`actions:['collect-submissions']` — email action is
+  upstream-broken on this stack) + `formSuccess()` for the visible sent-state
+- no stock images — typography, color and CSS/SVG graphics carry the design; `id`-prop anchors OK
 
-No stock images — typography, color and CSS graphics carry the design. Cross-page links use real
-pretty URLs; in-page CTAs may use `id`-prop anchors.
+**STRUCTURAL DIVERSITY IS A REQUIREMENT, not a suggestion.** The centered-column SaaS formula
+(hero → three feature cards → stats band → testimonial → CTA) is BANNED as a default. Rules:
+- At most ONE section per page may be a centered single-column block.
+- Use at least THREE distinct layout archetypes across the site, e.g.: split-screen (50/50 or
+  60/40) · asymmetric offset grid · sticky/pinned side rail with scrolling counterpart · full-bleed
+  color-block sections with hard seams · oversized display type as layout (numbers/words AS the
+  grid) · horizontal band/timeline · overlapping/stacked cards with depth · editorial multi-column
+  text (2-3 cols) · diagonal/shaped section breaks · a table as a design object.
+- Vary section RHYTHM: different vertical densities, at least one very tall and one very short
+  section per page; backgrounds must alternate meaningfully (not stripe-flip every section).
+- The four pages must NOT share one master section layout with swapped copy — each page gets at
+  least one layout move the other pages don't use.
+- Type scale must take a position: either huge display contrast (≥5× body) somewhere, or a strict
+  editorial scale — not the safe middle everywhere.
 
 ## Method
 
