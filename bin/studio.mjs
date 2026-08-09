@@ -210,11 +210,19 @@ bands assert a strip actually PAINTS (catches invisible dark-on-dark assets).`);
 
   if (cmd === 'pixeldiff') {
     const referencePath = val('--reference');
-    if (!referencePath) { console.log('usage: eu-studio pixeldiff --page-url </ or url> --reference <design.png> [--keep-shots <dir>]'); process.exit(2); }
+    if (!referencePath) { console.log('usage: eu-studio pixeldiff --page-url </ or url> --reference <design.png> [--keep-shots <dir>] [--exclude y0-y1:why[,y0-y1:why…]]'); process.exit(2); }
+    // --exclude 900-1800:mandated-form,6500-6576:no-marquee — reference-px bands where the build
+    // DELIBERATELY deviates; scored separately so the gate stays honest and reachable
+    const excludeBands = (val('--exclude', '') || '').split(',').filter(Boolean).map((tok) => {
+      const m = /^(\d+)-(\d+)(?::(.*))?$/.exec(tok.trim());
+      if (!m) { bad(`--exclude: bad band '${tok}' — want y0-y1[:why]`); process.exit(2); }
+      return { y0: Number(m[1]), y1: Number(m[2]), why: m[3] || 'mandated deviation' };
+    });
     const { run } = await import('../lib/pixeldiff.mjs');
-    const rep = await run(env, { pageUrl: val('--page-url', '/'), referencePath, keepShots: val('--keep-shots', null) });
+    const rep = await run(env, { pageUrl: val('--page-url', '/'), referencePath, keepShots: val('--keep-shots', null), excludeBands });
     const g = rep.meanAbsDiff <= 8;
-    (g ? ok : bad)(`photometric: mean |Δ| ${rep.meanAbsDiff}/255 (≤3 near-identical, 3-8 faithful, 8-20 visible deviations), worst 50px band ${rep.worstBand.mean} at y${rep.worstBand.band_y}`);
+    const ex = rep.excluded ? ` (excluded ${excludeBands.map((b) => `${b.y0}-${b.y1}`).join(',')}: |Δ| ${rep.excluded.meanAbsDiff})` : '';
+    (g ? ok : bad)(`photometric: mean |Δ| ${rep.meanAbsDiff}/255 (≤3 near-identical, 3-8 faithful, 8-20 visible deviations), worst 50px band ${rep.worstBand.mean} at y${rep.worstBand.band_y}${ex}`);
     console.log(JSON.stringify(rep));
     process.exit(0);
   }

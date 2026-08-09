@@ -74,6 +74,12 @@ theme.mjs → components → all four pages → lint (fix errors) → build → 
 ONE `check` call → screenshots, judge, fix what looks off → redeploy --fast (idempotent) →
 targeted re-check. **Max 2 fix rounds** — report residuals instead of chasing.
 
+Spend your thinking where it pays: deep design thought at THEME and AUTHORING time (one-shot the
+pages well), quick execution everywhere else — screenshots, crops, measurements and redeploys are
+mechanical, don't deliberate over them. Trust the gates' positive assertions: when lint prints
+`verified: … fonts covered …` or check passes a probe, that fact is PROVEN — don't re-verify it
+with hand-rolled scripts.
+
 ## Report (final message — keep it SHORT)
 
 - Page IDs + URLs (one line each)
