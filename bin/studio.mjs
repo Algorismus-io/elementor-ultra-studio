@@ -107,14 +107,17 @@ async function main() {
       }
     }
     if (!pagesCsv) {
-      console.log(`usage: eu-studio check --pages /,/about/ [--widths 1200,1512,390] [--form /contact/] [--accordion /pricing/] [--burger /] [--nav /=about]
+      console.log(`usage: eu-studio check --pages /,/about/ [--widths 1200,1920,390] [--form /contact/] [--accordion /pricing/] [--burger /] [--nav /=about]
 The ENTIRE post-deploy gate in one call and one browser session: structural matrix + interaction tests.`);
       process.exit(2);
     }
     const { run } = await import('../lib/check.mjs');
-    const widths = val('--widths', '1200,1512,390').split(',').map(Number);
+    // 1920 replaced 1512 as the wide probe after the audit — 1512 was too close to the 1200 design
+    // width to surface stretched-canvas defects that 1920 shows immediately
+    const widths = val('--widths', '1200,1920,390').split(',').map(Number);
     const rep = await run(env, { pages: pagesCsv.split(','), widths, tests });
-    for (const r of rep.structural.results) (r.ok ? ok : bad)(`${r.page} @${r.width}: ${r.error ? r.error : `sw=${r.scrollWidth} h1=${r.h1}${r.offenders?.length ? ' offenders: ' + r.offenders.join(',') : ''}`}`);
+    for (const r of rep.structural.results) (r.ok ? ok : bad)(`${r.page} @${r.width}: ${r.error ? r.error : `sw=${r.scrollWidth} h1=${r.h1}${r.offenders?.length ? ' offenders: ' + r.offenders.map((o) => `${o.reason}:${o.sel}`).join(', ') : ''}`}`);
+    for (const w of rep.structural.warnings || []) console.log(`  ${c.y}!${c.x} ${w.page} @${w.width}: ${w.reason} ${w.sel}${w.px ? ` (${w.px}px, ${w.lines} lines)` : ''}${w.card ? ` (card ${w.card})` : ''}`);
     for (const r of rep.interactions.results) (r.ok ? ok : bad)(`${r.test} @${r.page}: ${r.detail}`);
     console.log(JSON.stringify(rep));
     process.exit(rep.pass ? 0 : 1);
@@ -136,7 +139,7 @@ One call runs the standard interaction tests (no hand-written playwright needed)
   --form <page>       fill visible inputs, submit, assert success (ajax success:true | success text | form hidden)
   --accordion <page>  first <details>: opens, body visible, closes back
   --burger <page>     @390px: menu toggle reveals ≥2 links
-  --nav <page>=<text> click nav link matching <text>, assert navigation`);
+  --nav <page>=<text> click nav link whose text OR href pathname matches <text>, assert navigation`);
       process.exit(2);
     }
     const { run } = await import('../lib/clicktest.mjs');
@@ -163,9 +166,10 @@ One call runs the standard interaction tests (no hand-written playwright needed)
     if (pagesCsv) {
       // quick mode: no reference needed — structural matrix (scrollWidth/h1/console) per page×width
       const { run } = await import('../lib/quickverify.mjs');
-      const widths = val('--widths', '1200,1512,390').split(',').map(Number);
+      const widths = val('--widths', '1200,1920,390').split(',').map(Number);
       const rep = await run(env, { pages: pagesCsv.split(','), widths });
-      for (const r of rep.results) (r.ok ? ok : bad)(`${r.page} @${r.width}: ${r.error ? r.error : `sw=${r.scrollWidth} h1=${r.h1}${r.offenders?.length ? ' offenders: ' + r.offenders.join(',') : ''}${r.consoleErrors?.length ? ` jsErrors=${r.consoleErrors.length}` : ''}`}`);
+      for (const r of rep.results) (r.ok ? ok : bad)(`${r.page} @${r.width}: ${r.error ? r.error : `sw=${r.scrollWidth} h1=${r.h1}${r.offenders?.length ? ' offenders: ' + r.offenders.map((o) => `${o.reason}:${o.sel}`).join(', ') : ''}${r.consoleErrors?.length ? ` jsErrors=${r.consoleErrors.length}` : ''}`}`);
+      for (const w of rep.warnings || []) console.log(`  ${c.y}!${c.x} ${w.page} @${w.width}: ${w.reason} ${w.sel}${w.px ? ` (${w.px}px, ${w.lines} lines)` : ''}${w.card ? ` (card ${w.card})` : ''}`);
       console.log(JSON.stringify(rep));
       process.exit(rep.pass ? 0 : 1);
     }

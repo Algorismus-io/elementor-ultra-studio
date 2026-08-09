@@ -25,7 +25,8 @@ one-call tools, stop at the bar.
    → structural matrix (3 widths × all pages) + all interaction tests together, ~1 min total.
 4. After a fix that touches ONE page, re-check only it: `{{STUDIO_CLI}} check --pages /pricing/ [--accordion /pricing/]`
    — don't re-run the full matrix for a single-page change.
-5. Design review: a handful of playwright screenshots at 1200 + 390, viewed and judged.
+5. Design review: a handful of playwright screenshots at 1920 + 390, viewed and judged (wide
+   screens expose nav/section alignment bugs that 1200 hides — real users browse at 1512-2560).
 6. If css ever breaks: `{{STUDIO_CLI}} doctor` once; if the file store keeps flaking,
    `{{STUDIO_CLI}} carry-css --page <id> …` once at the end.
 
@@ -42,7 +43,10 @@ Four pages with FIXED slugs (home — front page after deploy via `/wp/v2/settin
 `{show_on_front:"page", page_on_front:<id>}` — plus `about`, `pricing`, `contact`), but YOU design
 each page's structure from its job. Hard requirements, few and testable:
 
-- every page: shared nav (with working mobile menu) + footer, one h1, real cross-page links
+- every page: shared nav (with working mobile menu) + footer, one h1, real cross-page links.
+  Mobile-burger rule: the burger `<html>` widget must be wrapped in a box that is `display="none"`
+  desktop / `mobile={{display:'flex'}}` — a bare html widget in a space-between header steals the
+  right flex slot on desktop and centers your links rail (invisible at 1200, broken on wide screens)
 - somewhere on `/pricing/`: the offer(s), plus ≥3 real `<details>/<summary>` disclosure items
   (FAQ, spec sheets, T&C — whatever fits the concept)
 - `/contact/`: a working Pro form (`actions:['collect-submissions']` — email action is
