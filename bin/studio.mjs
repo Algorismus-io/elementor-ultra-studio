@@ -227,6 +227,76 @@ bands assert a strip actually PAINTS (catches invisible dark-on-dark assets).`);
     process.exit(0);
   }
 
+  if (cmd === 'measure') {
+    // The clone-run measurement toolkit. A forensic audit found an agent hand-rolled EIGHT one-off
+    // playwright/PIL scripts (~15k chars, plus zsh-heredoc + BSD-sed breakage) for exactly these
+    // tasks — call these modes instead of writing capture/probe scripts.
+    const sub = argv[1];
+    const usage = `usage: eu-studio measure <mode> — clone-run measurement toolkit (never hand-write playwright/PIL for these)
+  shots    --page </> --widths 1512,390 [--out <dir>] [--full] [--crop x,y,w,h]  scroll-settled screenshots (fullPage default; --crop = doc-space region)
+  sections --page </> [--width 1512]                                            section rhythm scan: {sel, top, height} sorted by top
+  geom     --page </> --selector '<css>' [--width 1512] [--all]                  rect + display/position/font for first (--all: ≤40) match(es)
+  ink      --page </> --selector '<css>' [--width 1512]                          text ink extents vs element box (nowrap escapes, tracking drift)
+  fonts    --page </> [--width 1512]                                             which families ACTUALLY painted (width-vs-fallback probe)
+  compare  --ours <png|/page|url> --ref <png> [--out <dir>] [--bands 900]        side-by-side band sheets + per-band mean |Δ| table
+  copytext --html <file> [--min-len 3]                                           deduped, attributed copy inventory from saved HTML`;
+    const m = await import('../lib/measure.mjs');
+    const width = Number(val('--width', 1512));
+    const pageUrl = val('--page', '/');
+    if (sub === 'shots') {
+      const widths = val('--widths', String(width)).split(',').map(Number);
+      const cropCsv = val('--crop', null); // --full is the default; accepted for explicitness
+      const crop = cropCsv ? cropCsv.split(',').map(Number) : null;
+      if (crop && (crop.length !== 4 || crop.some(Number.isNaN))) { bad('--crop wants x,y,w,h'); process.exit(2); }
+      const rep = await m.shots(env, { pageUrl, widths, outDir: val('--out', null), crop });
+      for (const s of rep.shots) ok(`@${s.width}: ${s.path} (page ${s.pageHeight}px)`);
+      console.log(JSON.stringify(rep));
+      return;
+    }
+    if (sub === 'sections') {
+      const rep = await m.sections(env, { pageUrl, width });
+      ok(`${rep.sections.length} sections under ${rep.root} (page ${rep.pageHeight}px)`);
+      console.log(JSON.stringify(rep));
+      return;
+    }
+    if (sub === 'geom' || sub === 'ink') {
+      const selector = val('--selector');
+      if (!selector) { console.log(usage); process.exit(2); }
+      const rep = sub === 'geom'
+        ? await m.geom(env, { pageUrl, selector, width, all: has('--all') })
+        : await m.ink(env, { pageUrl, selector, width });
+      const none = sub === 'geom' ? rep.matches === 0 : !!rep.error;
+      (none ? bad : ok)(`${selector} @${width}: ${none ? 'no match' : sub === 'geom' ? `${rep.matches} match(es)` : `box ${rep.box.w}x${rep.box.h}, ink ${rep.ink ? `${rep.ink.w}x${rep.ink.h}` : 'none'}`}`);
+      console.log(JSON.stringify(rep));
+      process.exit(none ? 1 : 0);
+    }
+    if (sub === 'fonts') {
+      const rep = await m.fonts(env, { pageUrl, width });
+      for (const f of rep.families) (f.painted ? ok : bad)(`${f.family}: ${f.painted ? 'painted' : 'FELL BACK'}${f.generic ? ' (generic)' : ''} — sample ${f.sample_el}, faces ${f.faces.loaded}/${f.faces.total}`);
+      console.log(JSON.stringify(rep));
+      return;
+    }
+    if (sub === 'compare') {
+      const ours = val('--ours'), refPath = val('--ref');
+      if (!ours || !refPath) { console.log(usage); process.exit(2); }
+      const rep = await m.compare(env, { ours, refPath, outDir: val('--out', null), bandH: Number(val('--bands', 900)) });
+      for (const b of rep.bands) console.log(`  y${String(b.y0).padStart(5)}  |Δ| ${b.mean === null ? '—   ' : b.mean}  ${b.sheet}`);
+      ok(`overall mean |Δ| ${rep.overall}/255 (≤3 near-identical, 3-8 faithful, 8-20 visible deviations) — ref ${rep.refSize.join('x')} vs ours ${rep.oursSize.join('x')}`);
+      console.log(JSON.stringify(rep));
+      return;
+    }
+    if (sub === 'copytext') {
+      const htmlPath = val('--html');
+      if (!htmlPath) { console.log(usage); process.exit(2); }
+      const rep = m.copytext({ htmlPath: resolve(htmlPath), minLen: Number(val('--min-len', 3)) });
+      for (const l of rep.lines) console.log(l);
+      ok(`${rep.lines.length} lines, ${rep.chars} chars (raw file ${rep.rawChars}; dropped ${rep.dropped.duplicates} dupes, ${rep.dropped.lorem} lorem)`);
+      return;
+    }
+    console.log(usage);
+    process.exit(2);
+  }
+
   if (cmd === 'bench') {
     const sub = argv[1];
     const scenarioDir = val('--scenario');
@@ -330,6 +400,7 @@ render, anchors.json (with minW/minH presence floors + paint bands), a brief tem
   status    one-line health
   doctor    full health check + self-heal   [--page <id>] [--no-heal] [--json]
   verify    anchor/paint/mobile verification [--page-url <u>] --anchors <file>
+  measure   clone-run measurement toolkit    shots|sections|geom|ink|fonts|compare|copytext
   brief     generate an agent build brief    [--figma <url>] [--title <t>] [--out <f>]
 
   target: --url/--user/--app-password → WP_URL/WP_USER/WP_APP_PASSWORD env → local playground default`);

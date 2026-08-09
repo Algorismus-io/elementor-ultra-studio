@@ -25,8 +25,11 @@ one-call tools, stop at the bar.
    → structural matrix (3 widths × all pages) + all interaction tests together, ~1 min total.
 4. After a fix that touches ONE page, re-check only it: `{{STUDIO_CLI}} check --pages /pricing/ [--accordion /pricing/]`
    — don't re-run the full matrix for a single-page change.
-5. Design review: a handful of playwright screenshots at 1920 + 390, viewed and judged (wide
+5. Design review: `{{STUDIO_CLI}} measure shots --page / --widths 1920,390`, viewed and judged (wide
    screens expose nav/section alignment bugs that 1200 hides — real users browse at 1512-2560).
+   ALL measurement needs — screenshots, section rhythm, element geometry, text ink, font paint,
+   ref-vs-ours diff sheets, copy extraction — are `{{STUDIO_CLI}} measure <shots|sections|geom|ink|fonts|compare|copytext>`;
+   never hand-write playwright or PIL scripts for them.
 6. If css ever breaks: `{{STUDIO_CLI}} doctor` once; if the file store keeps flaking,
    `{{STUDIO_CLI}} carry-css --page <id> …` once at the end.
 
